@@ -1,0 +1,10 @@
+{
+    "faucet-account": "%user_account%",
+    "faucet-active-priv-key": "%privwif%",
+    "recaptcha-site-key": null,
+    "recaptcha-secret": null,
+    "signup-redirect-address": "http://localhost:8080/#/register?token=DUMMY",
+    "faucet-vest-amount": 0,
+    "faucet-muse-amount": 0,
+    "faucet-muse-memo": "Funds from faucet"
+}
