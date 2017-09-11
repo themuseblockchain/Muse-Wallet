@@ -122,9 +122,9 @@ class VoteWitness extends Component {
                             {this.state.witnessByVotes.map(function (i, ind) {
                                 let button = null;
                                 if(account_witness_votes.indexOf(i.owner) > -1){
-                                    button = <button className="btn btn-outline-secondary btn-sm" onClick={that.witnessUnVoteOne.bind(this, i.owner)}><i className="fa fa-thumbs-up"></i></button>;
+                                    button = <button className="btn btn-success btn-sm" onClick={that.witnessUnVoteOne.bind(this, i.owner)}><i className="fa fa-thumbs-up"></i></button>;
                                 } else {
-                                    button = <button className="btn btn-success btn-sm" onClick={that.witnessVoteOne.bind(this, i.owner)}><i className="fa fa-thumbs-up"></i></button>;
+                                    button = <button className="btn btn-outline-primary btn-sm" onClick={that.witnessVoteOne.bind(this, i.owner)}><i className="fa fa-thumbs-up"></i></button>;
                                 }
                                 return (
                                     <tr>
