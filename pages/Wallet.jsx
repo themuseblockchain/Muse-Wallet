@@ -420,6 +420,9 @@ class Wallet extends Component {
             history_info.text = 'Sent ' + operationData.amount.split(" ")[0] + ' VEST to ' + operationData.to;
             }
             break;
+        case "withdraw_vesting":
+            history_info.text = 'Withdrawing ' + operationData.vesting_shares.split(" ")[0] + 'VEST';
+            break;
         case "account_witness_vote":
             if(operationData.approve)
             {
@@ -437,7 +440,7 @@ class Wallet extends Component {
             history_info.text = 'Account Update';
             break;
         default: 
-            history_info.text = "Unknown operation: " + operationName;
+            history_info.text = 'Unknown operation: ' + operationName;
         }
 
         return history_info;
@@ -567,9 +570,11 @@ class Wallet extends Component {
                             <table className="table table-hover table-striped">
                                 <tbody>
                                     {this.state.walletHistory.map(function (i) {
+                                        console.log(i);
                                         return (
                                             <tr>
                                                 <td width="30%">{(new Date(Date.parse(i.date)).toISOString().split('.')[0]).substr(0,10)}</td>
+
                                                 <td>{i.text}</td>
                                             </tr>
                                         )

@@ -116,6 +116,7 @@ class VoteWitness extends Component {
                             <td></td>
                             <td></td>
                             <td>Witness</td>
+                            <td>Last Minted Block</td>
                             <td>Information</td>
                         </thead>
                         <tbody>
@@ -131,7 +132,9 @@ class VoteWitness extends Component {
                                         <td>{ind+1}</td>
                                         <td>{button}</td>
                                         <td width="50%">{i.owner}</td>
+                                        <td>{i.last_confirmed_block_num}</td>
                                         <td><a href={i.url} target="_blank">{i.url}</a></td>
+
                                     </tr>
                                 )
                             })}
