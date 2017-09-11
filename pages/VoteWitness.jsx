@@ -37,7 +37,7 @@ class VoteWitness extends Component {
         let username = window.localStorage.getItem('username');
         let userInfo = muse.accountInfo(username, this.callbackUserInfo);
 
-        muse.witnessesByVote(30, null, this.callbackWitnessbyVotes)
+        muse.witnessesByVote(50, null, this.callbackWitnessbyVotes)
         //muse.witnessInfo(username, this.callbackWitnessbyVotes)
     }
 

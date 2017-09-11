@@ -423,11 +423,11 @@ class Wallet extends Component {
         case "account_witness_vote":
             if(operationData.approve)
             {
-            history_info.text = 'Upvoted witness ' + operationData.witness;
+            history_info.text = 'Voted witness ' + operationData.witness;
             }
             else
             {
-            history_info.text = 'Unvoted witness ' + operationData.witness;
+            history_info.text = 'UnVoted witness ' + operationData.witness;
             }
             break;
         case "witness_update":
