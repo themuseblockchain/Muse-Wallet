@@ -427,7 +427,7 @@ class Wallet extends Component {
             }
             else
             {
-            history_info.text = 'Downvoted witness ' + operationData.witness;
+            history_info.text = 'Unvoted witness ' + operationData.witness;
             }
             break;
         case "witness_update":
@@ -437,7 +437,7 @@ class Wallet extends Component {
             history_info.text = 'Account Update';
             break;
         default: 
-            history_info.text = "Unknow operation: " + operationName;
+            history_info.text = "Unknown operation: " + operationName;
         }
 
         return history_info;
