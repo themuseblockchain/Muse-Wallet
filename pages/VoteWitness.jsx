@@ -108,7 +108,8 @@ class VoteWitness extends Component {
         return (
             <div className="wallet-container margin-top-50 margin-bottom-65 tabs-wrapper">
                 <h3>Witness Voting</h3>
-
+                <h6>As a MUSE holder you get 30 witness votes, use them wisely.</h6>
+                <h6>You have   {30 - this.state.witnessVotes.length}   witness votes left.</h6>
                 <div className="margin-top-50">
                     
                     <table className="table table-hover table-striped">
