@@ -13,13 +13,23 @@
 
         <link rel="shortcut icon" href="assets/img/favicon.png"/>
         <script src="steem-js/dist/muse.min.js">
-        
+
         </script>
     </head>
 
     <body>
         <div id="app"></div>
+        <script>
+
+        muse.api.streamTransactionsAsync(function(err, t) {
+            if(err) {
+                return err;
+                    };
+            console.log(t);
+        });
+        </script>
         <div id="popup_container"></div>
-        <script src="index.js"></script>
+        <!--<script src="index.js"></script>-->
     </body>
 </html>
+

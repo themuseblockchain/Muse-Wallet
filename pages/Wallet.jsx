@@ -170,7 +170,7 @@ class Wallet extends Component {
         {
             // error
             //alert("It seems you were input the wrong account name or wrong amount. Please try again.");
-            console.log(muse.lastError.message.split("\n"));
+            //console.log(muse.lastError.message.split("\n"));
             var lastErrorMsg = muse.lastError.message.split("\n");
             if(lastErrorMsg.length > 2){
                 var tmpSplit = lastErrorMsg[1].split(":");
@@ -413,7 +413,7 @@ class Wallet extends Component {
             if(operationData.to == userName)
             {
             //history_info.text = 'Received ' + operationData.amount.split(" ")[0] + ' VEST from ' + operationData.from;
-            history_info.text = 'Transferred ' + operationData.amount.split(" ")[0] + ' MUSE to Vesting';
+            history_info.text = 'Transferred ' + operationData.amount.split(" ")[0] + ' MUSE to VEST';
             }
             else
             {
@@ -421,7 +421,7 @@ class Wallet extends Component {
             }
             break;
         case "withdraw_vesting":
-            history_info.text = 'Withdrawing ' + operationData.vesting_shares.split(" ")[0] + 'VEST';
+            history_info.text = 'Withdrawing ' + operationData.vesting_shares.split(" ")[0] + ' VEST';
             break;
         case "account_witness_vote":
             if(operationData.approve)
@@ -570,7 +570,7 @@ class Wallet extends Component {
                             <table className="table table-hover table-striped">
                                 <tbody>
                                     {this.state.walletHistory.map(function (i) {
-                                        console.log(i);
+                                        //console.log(i);
                                         return (
                                             <tr>
                                                 <td width="30%">{(new Date(Date.parse(i.date)).toISOString().split('.')[0]).substr(0,10)}</td>

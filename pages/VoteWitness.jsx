@@ -42,14 +42,14 @@ class VoteWitness extends Component {
     }
 
     callbackWitnessbyVotes(code, message, data){
-        console.log(message);
-        console.log(data);
+        //console.log(message);
+        //console.log(data);
         this.setState({witnessByVotes: data });
     }
 
     callbackWitnessVote(code, message){
-        console.log(code);
-        console.log(message);
+        //console.log(code);
+        //console.log(message);
         if(code == 1){
             window.location.reload();
         } else {
@@ -59,7 +59,7 @@ class VoteWitness extends Component {
     }
 
     callbackUserInfo(res, message, data) {
-        console.log(data);
+        //console.log(data);
         this.setState({witnessVotes: data.witnessVotes });
     }
 
@@ -84,7 +84,7 @@ class VoteWitness extends Component {
 
     witnessVoteOne(witness_name){
         this.setState({loading: true});
-        console.log(witness_name);
+        //console.log(witness_name);
 
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
