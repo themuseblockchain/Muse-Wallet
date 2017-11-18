@@ -310,7 +310,7 @@ class Wallet extends Component {
         }
         else if(this.state.amount == "" || isNaN(this.state.amount)){
             isValidated = false;
-            alert("Please input the numberic value for the amount field");
+            alert("Please input the numeric value for the amount field");
         }
         else if(parseFloat(this.state.amount) > parseFloat(this.state.walletInfo.balance)){
             isValidated = false;
@@ -333,7 +333,7 @@ class Wallet extends Component {
 
         if(this.state.amount == "" || isNaN(this.state.amount)){
             isValidated = false;
-            alert("Please input the numberic value for the amount field");
+            alert("Please input the numeric value for the amount field");
         }
         else if(parseFloat(this.state.amount) > parseFloat(this.state.walletInfo.balance)){
             isValidated = false;
@@ -426,11 +426,11 @@ class Wallet extends Component {
         case "account_witness_vote":
             if(operationData.approve)
             {
-            history_info.text = 'Voted witness ' + operationData.witness;
+            history_info.text = 'Voted Witness ' + operationData.witness;
             }
             else
             {
-            history_info.text = 'UnVoted witness ' + operationData.witness;
+            history_info.text = 'UnVoted Witness ' + operationData.witness;
             }
             break;
         case "witness_update":
@@ -438,6 +438,10 @@ class Wallet extends Component {
             break;
         case "account_update":
             history_info.text = 'Account Update';
+            break;
+        case "custom_json":
+            console.log(operationData);
+            history_info.text = 'Custom Json ' + operationData.id + ' ' + operationData.json + ' ' + operationData.required_auths + ' ' + operationData.required_basic_auths;
             break;
         default: 
             history_info.text = 'Unknown operation: ' + operationName;
@@ -785,7 +789,7 @@ class Wallet extends Component {
                 <Modal isOpen={this.state.modalWithdrawVesting} toggle={this.toggleModalWithdrawVesting} className={this.props.className}>
                     <ModalHeader toggle={this.toggleModalWithdrawVesting}>Withdraw Vesting</ModalHeader>
                     <ModalBody>
-                        <p>Withdraw Vesting.</p>
+                        <p>Withdraw Vesting. Please remember the decimal place moves 3 places to the left from VESTS to MUSE. Example 300000 VEST is 300 MUSE</p>
 
                         <div className="form-group row">
                             <label for="transfer-amount" className="col-2 col-form-label">Amount</label>

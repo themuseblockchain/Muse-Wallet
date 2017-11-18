@@ -8,6 +8,7 @@ import Wallet from '../pages/Wallet.jsx'
 import Register from '../pages/Register.jsx'
 import ClaimStake from '../pages/ClaimStake.jsx'
 import VoteWitness from '../pages/VoteWitness.jsx'
+import PostContent from '../pages/PostContent.jsx'
 
 export default (
     <Route path="/" component={LandingLayout}>
@@ -17,5 +18,6 @@ export default (
         <Route path="/claim-stake" component={ClaimStake}/>
         <Route path="/vote-witness" component={VoteWitness}/>
         <Route path="/register" component={Register}/>
+        <Route path="/postcontent" component={PostContent}/>
     </Route>
 );

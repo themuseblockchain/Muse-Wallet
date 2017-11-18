@@ -97,7 +97,7 @@ export default class Header extends Component {
                             <img src="assets/img/logo.png" height="auto" width="60"/>
                             <span>MUSE beta</span>
 
-                            {isLoggedIn() ? <span className="login-btn account-btn cursor-pointer"> &nbsp;&nbsp;|&nbsp;&nbsp; @{getUserInformation()}</span> : null}
+                            {isLoggedIn() ? <span className="login-btn account-btn cursor-pointer"> &nbsp;&nbsp;|&nbsp;&nbsp; @{getUserInformation()} &nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0)" onClick={this.gotoPage.bind(this, '/postcontent')}>Post Content</a></span> : null}
                         </div>
                     </NavbarBrand>
 
