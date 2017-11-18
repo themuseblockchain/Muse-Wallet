@@ -426,11 +426,11 @@ class Wallet extends Component {
         case "account_witness_vote":
             if(operationData.approve)
             {
-            history_info.text = 'Voted witness ' + operationData.witness;
+            history_info.text = 'Voted Witness ' + operationData.witness;
             }
             else
             {
-            history_info.text = 'UnVoted witness ' + operationData.witness;
+            history_info.text = 'UnVoted Witness ' + operationData.witness;
             }
             break;
         case "witness_update":
@@ -438,6 +438,10 @@ class Wallet extends Component {
             break;
         case "account_update":
             history_info.text = 'Account Update';
+            break;
+        case "custom_json":
+            console.log(operationData);
+            history_info.text = 'Custom Json ' + operationData.id + ' ' + operationData.json + ' ' + operationData.required_auths + ' ' + operationData.required_basic_auths;
             break;
         default: 
             history_info.text = 'Unknown operation: ' + operationName;
