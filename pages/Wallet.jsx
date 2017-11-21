@@ -161,7 +161,6 @@ class Wallet extends Component {
     callbackUserInfo(res, message, data) {
         data.balance = data.balance.toFixed(6);
         data.vesting = data.vesting;
-        console.log(data)
         this.setState({walletInfo: data });
     }
 
@@ -445,7 +444,6 @@ class Wallet extends Component {
             history_info.text = 'Content Listed: URL: ' + operationData.url + ' Uploader: ' + operationData.uploader;
             break;
         case "fill_vesting_withdraw":
-            console.log(operationData);
             history_info.text = 'Withdrawal of VESTS completed from account: ' + operationData.from_account + ' to account: ' + operationData.to_account + ' of ' + operationData.deposited.split(" ")[0] + ' MUSE.';
             break;
         case "custom_json":
