@@ -160,7 +160,8 @@ class Wallet extends Component {
 
     callbackUserInfo(res, message, data) {
         data.balance = data.balance.toFixed(6);
-        data.vesting = data.vesting.toFixed(6);
+        data.vesting = data.vesting;
+        console.log(data)
         this.setState({walletInfo: data });
     }
 
@@ -424,13 +425,14 @@ class Wallet extends Component {
             history_info.text = 'Withdrawing ' + operationData.vesting_shares.split(" ")[0] + ' VEST';
             break;
         case "account_witness_vote":
+        
             if(operationData.approve)
             {
-            history_info.text = 'Voted Witness ' + operationData.witness;
+            history_info.text =  operationData.account +' Voted Witness ' + operationData.witness;
             }
             else
             {
-            history_info.text = 'UnVoted Witness ' + operationData.witness;
+            history_info.text = operationData.account + ' UnVoted Witness ' + operationData.witness;
             }
             break;
         case "witness_update":
@@ -439,8 +441,14 @@ class Wallet extends Component {
         case "account_update":
             history_info.text = 'Account Update';
             break;
-        case "custom_json":
+        case "content":
+            history_info.text = 'Content Listed: URL: ' + operationData.url + ' Uploader: ' + operationData.uploader;
+            break;
+        case "fill_vesting_withdraw":
             console.log(operationData);
+            history_info.text = 'Withdrawal of VESTS completed from account: ' + operationData.from_account + ' to account: ' + operationData.to_account + ' of ' + operationData.deposited.split(" ")[0] + ' MUSE.';
+            break;
+        case "custom_json":
             history_info.text = 'Custom Json ' + operationData.id + ' ' + operationData.json + ' ' + operationData.required_auths + ' ' + operationData.required_basic_auths;
             break;
         default: 
