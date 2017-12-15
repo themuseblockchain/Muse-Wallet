@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var muse = require('museblockchain-js');
+var muse = require('muse-js');
 
 var reCAPTCHA = require('recaptcha2')
 

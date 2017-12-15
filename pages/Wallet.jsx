@@ -4,7 +4,7 @@ import { hashHistory  } from 'react-router'
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 import {getUserInformation} from '../helpers/Authentication.jsx'
 
-import muse from 'museblockchain-js';
+import muse from 'muse-js';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';

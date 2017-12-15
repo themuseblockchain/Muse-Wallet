@@ -27,7 +27,7 @@
     "joi": "^10.6.0",
     "joi-validation-strategy": "^0.3.3",
     "morgan": "~1.8.1",
-    "museblockchain-js": "0.0.1",
+    "muse-js": "git://github.com/Tadasu85/Muse-JS-1.git",
     "random-string": "^0.2.0",
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.0",

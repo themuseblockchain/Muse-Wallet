@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import validation from 'react-validation-mixin';
 import strategy from 'joi-validation-strategy';
 import Joi from 'joi';
-import muse from 'museblockchain-js';
+import muse from 'muse-js';
 import axios from 'axios';
 import config from '../config.json';
 

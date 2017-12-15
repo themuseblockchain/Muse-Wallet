@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import { hashHistory  } from 'react-router'
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 
-import muse from 'museblockchain-js'
+import muse from 'muse-js'
 import localConfig from '../config.json'
 muse.configure(localConfig);
 
@@ -42,24 +42,11 @@ class PostContent extends Component {
               loading: false
             };
 
-            this.changeUrl = this.changeUrl.bind(this);
-            this.changeAlbum_Title = this.changeAlbum_Title.bind(this);
-            this.changeAlbum_Genre = this.changeAlbum_Genre.bind(this);
-            this.changeOrigin = this.changeOrigin.bind(this);
-            this.changeUPC_EAN = this.changeUPC_EAN.bind(this);
-            this.changeRelease_Date = this.changeRelease_Date.bind(this);
-            this.changeRelease_Year = this.changeRelease_Year.bind(this);
-            this.changeSale_Date = this.changeSale_Date.bind(this);
-            this.changeMaster_Label_Name = this.changeMaster_Label_Name.bind(this);
-            this.changeDisplay_Label_Name = this.changeDisplay_Label_Name.bind(this);
-            this.changeTrack_Title = this.changeTrack_Title.bind(this);
-            this.changeISRC = this.changeISRC.bind(this);
-            this.changeTrack_Number = this.changeTrack_Number.bind(this);
-            this.changeComposition_Title = this.changeComposition_Title.bind(this);
-            this.changeHas_samples = this.changeHas_samples.bind(this);
-            this.changeIs_explicit = this.changeIs_explicit.bind(this);
-            this.changeIs_third_party = this.changeIs_third_party.bind(this);
-            this.changeIs_part_of_album = this.changeIs_part_of_album.bind(this);      
+            this.changeObject = this.changeObject.bind(this);
+            this.handlePartofalbum = this.handlePartofalbum.bind(this);
+            this.handleSamples = this.handleSamples.bind(this);
+            this.handleThirdparty =this.handleThirdparty.bind(this);
+            this.handleExplicit = this.handleExplicit.bind(this);
 
         }
 
@@ -69,152 +56,52 @@ class PostContent extends Component {
         }
     }
 
-    changeUrl(e) {
+    changeObject(e) {
 
-        let url = e.target.value;
-        this.setState({ url: url });
+      console.log(e);
 
-        window.localStorage.setItem("url", url);
+      var object = e.target.name;
+
+      console.log("this is the object", object);
+
+      let content = e.target.value;
+
+      console.log("this is the content", content);
+
+      this.setState({object : content});
+
+      window.localStorage.setItem(object, content);
     };
 
-    changeAlbum_Title(e) {
-
-        let album_title = e.target.value;
-        this.setState({ album_title: album_title });
-
-        window.localStorage.setItem("album_title", album_title);
+    handlePartofalbum(e) {
+        console.log(e);
+        let partofalbum_status = e.target.checked;
+        this.setState({part_of_album: partofalbum_status});
+        console.log();
     };
 
-    changeAlbum_Genre(e) {
-
-        let genre_1 = e.target.value;
-        this.setState({ genre_1: genre_1 });
-
-        window.localStorage.setItem("genre_1", genre_1);
+    handleSamples(e) {
+        console.log(e);
+        let samples_status = e.target.checked;
+        this.setState({samples: samples_status});
+        console.log();
     };
 
-    changeOrigin(e) {
-
-        let country_of_origin = e.target.value;
-        this.setState({ country_of_origin: country_of_origin });
-
-        window.localStorage.setItem("country_of_origin", country_of_origin);
+    handleThirdparty(e) {
+        console.log(e);
+        let thirdparty_status = e.target.checked;
+        this.setState({third_party_publishers: thirdparty_status});
+        console.log();
     };
 
-    changeUPC_EAN(e) {
-
-        let upc_or_ean = e.target.value;
-        this.setState({ upc_or_ean: upc_or_ean });
-
-        window.localStorage.setItem("upc_or_ean", upc_or_ean);
+    handleExplicit(e) {
+        console.log(e);
+        let explicit_status = e.target.checked;
+        this.setState({explicit_: explicit_status});
+        console.log(explicit_);
     };
 
-    changeRelease_Date(e) {
 
-        let release_date = e.target.value;
-        this.setState({ release_date: release_date });
-
-        window.localStorage.setItem("release_date", release_date);
-    };
-
-    changeRelease_Year(e) {
-
-        let release_year = e.target.value;
-        this.setState({ release_year: release_year });
-
-        window.localStorage.setItem("release_year", release_year);
-    };
-
-    changeSale_Date(e) {
-
-        let sales_start_date = e.target.value;
-        this.setState({ sales_start_date: sales_start_date });
-
-        window.localStorage.setItem("sales_start_date", sales_start_date);
-    };
-
-    changeMaster_Label_Name(e) {
-
-        let master_label_name = e.target.value;
-        this.setState({ master_label_name: master_label_name });
-
-        window.localStorage.setItem("master_label_name", master_label_name);
-    };
-
-    changeDisplay_Label_Name(e) {
-
-        let display_label_name = e.target.value;
-        this.setState({ display_label_name: display_label_name });
-
-        window.localStorage.setItem("display_label_name", display_label_name);
-    };
-
-    changeTrack_Title(e) {
-
-        let track_title = e.target.value;
-        this.setState({ track_title: track_title });
-
-        window.localStorage.setItem("track_title", track_title);
-    };
-
-    changeISRC(e) {
-
-        let ISRC = e.target.value;
-        this.setState({ ISRC: ISRC });
-
-        window.localStorage.setItem("ISRC", ISRC);
-    };
-
-    changeTrack_Number(e) {
-
-        let track_no = e.target.value;
-        this.setState({ track_no: track_no });
-
-        window.localStorage.setItem("track_no", track_no);
-    };
-
-    
-    changeComposition_Title(e) {
-
-        let composition_title = e.target.value;
-        this.setState({ composition_title: composition_title });
-
-        window.localStorage.setItem("composition_title", composition_title);
-    };
-
-    changeHas_samples(e) {
-
-        let samples = e.target.value;
-        this.setState({ samples: samples });
-
-        window.localStorage.setItem("samples", samples);
-    };
-
-    changeIs_explicit(e) {
-
-        let explicit_ = e.target.value;
-        this.setState({ explicit_: explicit_ });
-
-        window.localStorage.setItem("explicit_", explicit_);
-    };
-
-    changeIs_third_party(e) {
-
-        let third_party_publishers = e.target.value;
-        this.setState({ third_party_publishers: third_party_publishers });
-
-        window.localStorage.setItem("third_party_publishers", third_party_publishers);
-    };
-
-    changeIs_part_of_album(e) {
-
-        let part_of_album = e.target.value;
-        this.setState({ part_of_album: part_of_album });
-
-        window.localStorage.setItem("part_of_album", part_of_album);
-    };
-
-    
 
     postContent() {
 
@@ -280,6 +167,8 @@ class PostContent extends Component {
 
         let pro = window.localStorage.getItem('pro');
 
+        console.log(this);
+
 
 
         muse.broadcast.content(
@@ -290,9 +179,9 @@ class PostContent extends Component {
 
         url,
         {
-          "part_of_album": part_of_album,
+          "part_of_album": part_of_album.split(" ")[1],
           "album_title": album_title,
-          "album_artist": album_artist,
+          "album_artist": [username],
           "genre_1": genre_1,
           "country_of_origin": country_of_origin,
           "explicit_": explicit_,
@@ -308,8 +197,8 @@ class PostContent extends Component {
         {
           "track_title": track_title,
           "ISRC": ISRC,
-          "track_artists": track_artists,
-          "genre_1": track_genre_1,
+          "track_artists": [username],
+          "genre_1": genre_1,
           "p_line": track_p_line,
           "track_no": track_no,
           "track_volume": track_volume,
@@ -323,7 +212,7 @@ class PostContent extends Component {
           "writers": writers,
           "PRO": pro
         },
-              
+
         [{
           "payee": username,
           "bp": 10000
@@ -346,65 +235,65 @@ class PostContent extends Component {
       });
     }
 
-    render() {
-        return (
+render() {
+   return (
             <div className="wallet-container margin-top-50 margin-bottom-65 tabs-wrapper">
                 <h3><p>Posting Content Information</p></h3>
 
                 <div className="form-group margin-top-50">
 
                 <div className="checkbox">
-                                <label><input type="checkbox" value="checked" onChange={this.changeIs_part_of_album} onKeyPress={this.handleKeyPress}/>Content is part of an album?</label>
+                                <label><input type="checkbox" name="part_of_album"/>Content is part of an album?</label>
                             </div>
                 <div className="checkbox">
-                                <label><input type="checkbox" value="checked" onChange={this.changeHas_samples} onKeyPress={this.handleKeyPress}/>Content has sample tracks?</label>
+                                <label><input type="checkbox" name="samples" />Content has sample tracks?</label>
                             </div>
                 <div className="checkbox">
-                                <label><input type="checkbox" value="checked" onChange={this.changeIs_third_party} onKeyPress={this.handleKeyPress}/>Content is third party managed?</label>
+                                <label><input type="checkbox" name="third_party_publishers" />Content is third party managed?</label>
                             </div>
                 <div className="checkbox">
-                                <label><input type="checkbox" value="checked" onChange={this.changeIs_explicit} onKeyPress={this.handleKeyPress}/>Content is Explicit?</label>
+                                <label><input type="checkbox" name="explicit_" />Content is explicit?</label>
                             </div>
 
                 <h1>Album Data:</h1>
-    
-                <input className="form-control" name="URL" onChange={this.changeUrl} placeholder="Content URL IPFS" onKeyPress={this.handleKeyPress}/>
 
-                <input className="form-control" name="Album Title" onChange={this.changeAlbum_Title} placeholder="Album Title" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="Album Genre" onChange={this.changeAlbum_Genre} placeholder="Album Genre" onKeyPress={this.handleKeyPress}/>  
-                
-                <input className="form-control" name="Country of Origin" onChange={this.changeOrigin} placeholder="Country of Origin" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="UPC or EAN" onChange={this.changeUPC_EAN} placeholder="UPC or EAN" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="Release Date" onChange={this.changeRelease_Date} placeholder="Release Date" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="Release Year" onChange={this.changeRelease_Year} placeholder="Release Year" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="Sales Start Date" onChange={this.changeSale_Date} placeholder="Sales Start Date" onKeyPress={this.handleKeyPress}/>
-                  
-                <input className="form-control" name="Master Label Name" onChange={this.changeMaster_Label_Name} placeholder="Master Label Name" onKeyPress={this.handleKeyPress}/>
-                
-                <input className="form-control" name="Display Label Name" onChange={this.changeDisplay_Label_Name} placeholder="Display Label Name" onKeyPress={this.handleKeyPress}/>
+                <input className="form-control" name="url" onChange={this.changeObject} placeholder="Content URL IPFS" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="album_title" onChange={this.changeObject} placeholder="Album Title" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="genre_1" onChange={this.changeObject} placeholder="Album Genre" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="country_of_origin" onChange={this.changeObject} placeholder="Country of Origin" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="upc_or_ean" onChange={this.changeObject} placeholder="UPC or EAN" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="release_date" onChange={this.changeObject} placeholder="Release Date" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="release_year" onChange={this.changeObject} placeholder="Release Year" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="sales_start_date" onChange={this.changeObject} placeholder="Sales Start Date" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="master_label_name" onChange={this.changeObject} placeholder="Master Label Name" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="display_label_name" onChange={this.changeObject} placeholder="Display Label Name" onKeyPress={this.handleKeyPress}/>
 
                 <h1>Track Data:</h1>
 
-                <input className="form-control" name="Track Title" onChange={this.changeTrack_Title} placeholder="Track Title" onKeyPress={this.handleKeyPress}/>
-    
-                <input className="form-control" name="ISRC code" onChange={this.changeISRC} placeholder="ISRC code" onKeyPress={this.handleKeyPress}/>
-      
-                <input className="form-control" name="Track Number" onChange={this.changeTrack_Number} placeholder="Track Number" onKeyPress={this.handleKeyPress}/>
+                <input className="form-control" name="track_title" onChange={this.changeObject} placeholder="Track Title" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="ISRC" onChange={this.changeObject} placeholder="ISRC code" onKeyPress={this.handleKeyPress}/>
+
+                <input className="form-control" name="track_no" onChange={this.changeObject} placeholder="Track Number" onKeyPress={this.handleKeyPress}/>
 
                 <h1>Composition Data:</h1>
 
-                <input className="form-control" name="Composition Title" onChange={this.changeComposition_Title} placeholder="Composition Title" onKeyPress={this.handleKeyPress}/>
+                <input className="form-control" name="composition_title" onChange={this.changeObject} placeholder="Composition Title" onKeyPress={this.handleKeyPress}/>
 
                 </div>
 
                 <div className="form-group margin-top-50">
                     <button type="button" className="btn btn-primary" onClick={this.postContent}>Post Content</button>
-                </div>                            
+                </div>
 
                 <div className={`loader-wrapper ${this.state.loading ? 'visible' : 'hidden'}`}></div>
                 <div className={`loader-container ${this.state.loading ? 'visible' : 'hidden'}`}>
@@ -415,7 +304,6 @@ class PostContent extends Component {
             </div>
         )
     }
-
 }
 
 export default PostContent;

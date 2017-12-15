@@ -4,7 +4,7 @@ import { hashHistory  } from 'react-router'
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 import {getUserInformation} from '../helpers/Authentication.jsx'
 
-import muse from 'museblockchain-js';
+import muse from 'muse-js';
 
 class ClaimStake extends Component {
     constructor(props) {

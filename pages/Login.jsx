@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import { hashHistory  } from 'react-router'
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 
-import muse from 'museblockchain-js'
+import muse from 'muse-js'
 import localConfig from '../config.json'
 muse.configure(localConfig);
 
@@ -98,8 +98,10 @@ class Login extends Component {
     };
 
     handleRememberMe(e) {
+        console.log(e);
         let remember_me_check_status = e.target.checked;
         this.setState({remember_me: remember_me_check_status});
+        console.log(remember_me_check_status);
     }
 
     handleKeyPress(target) {
