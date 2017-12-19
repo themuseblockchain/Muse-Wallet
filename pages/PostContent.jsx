@@ -74,29 +74,31 @@ class PostContent extends Component {
     };
 
     handlePartofalbum(e) {
-        console.log(e);
+        let part_of_album = window.localStorage.getItem('part_of_album');
+        console.log(e.target);
         let partofalbum_status = e.target.checked;
         this.setState({part_of_album: partofalbum_status});
-        console.log();
+        console.log(e.target);
+        console.log(part_of_album);
     };
 
     handleSamples(e) {
         console.log(e);
-        let samples_status = e.target.checked;
+        let samples_status = e.target.true;
         this.setState({samples: samples_status});
         console.log();
     };
 
     handleThirdparty(e) {
         console.log(e);
-        let thirdparty_status = e.target.checked;
+        let thirdparty_status = e.target.true;
         this.setState({third_party_publishers: thirdparty_status});
         console.log();
     };
 
     handleExplicit(e) {
         console.log(e);
-        let explicit_status = e.target.checked;
+        let explicit_status = e.target.true;
         this.setState({explicit_: explicit_status});
         console.log(explicit_);
     };
@@ -167,7 +169,7 @@ class PostContent extends Component {
 
         let pro = window.localStorage.getItem('pro');
 
-        console.log(this);
+        console.log(window.localStorage);
 
 
 
@@ -243,7 +245,8 @@ render() {
                 <div className="form-group margin-top-50">
 
                 <div className="checkbox">
-                                <label><input type="checkbox" name="part_of_album"/>Content is part of an album?</label>
+                                <label><input type="checkbox" checked={this.state.unchecked}
+          onChange={this.handlePartofalbum} name="part_of_album"/>Content is part of an album?</label>
                             </div>
                 <div className="checkbox">
                                 <label><input type="checkbox" name="samples" />Content has sample tracks?</label>
