@@ -17,6 +17,7 @@ class Wallet extends Component {
 
         this.state = {
             walletInfo: [],
+            accountInfo: [],
             dropdownOpen: false,
             dropdownOpenVM: false,
             dropdownOpenMD: false,
@@ -40,6 +41,7 @@ class Wallet extends Component {
         };
 
         this.callbackUserInfo = this.callbackUserInfo.bind(this);
+        this.callbackFullUserInfo = this.callbackFullUserInfo.bind(this);
         this.callbackTransferFunds = this.callbackTransferFunds.bind(this);
         this.callbackTransferVestingFunds = this.callbackTransferVestingFunds.bind(this);
         this.callbackWithdrawVesting = this.callbackWithdrawVesting.bind(this);
@@ -147,6 +149,7 @@ class Wallet extends Component {
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
         let userInfo = muse.accountInfo(username, this.callbackUserInfo);
+        let fulluserInfo = muse.api.getAccounts([username], this.callbackFullUserInfo);
 
         var key_to_use = muse.auth.getPrivateKeys(username, password, ["owner", "active", "basic", "memo"]);
         this.setState({keyInfo: key_to_use});
@@ -161,7 +164,16 @@ class Wallet extends Component {
     callbackUserInfo(res, message, data) {
         data.balance = data.balance.toFixed(6);
         data.vesting = data.vesting;
+
         this.setState({walletInfo: data });
+    }
+
+    callbackFullUserInfo(res, message, data) {
+
+        data = message[0].next_vesting_withdrawal;
+
+        this.setState({accountInfo: data.replace("T", " ") });
+        
     }
 
     tryHandleError()
@@ -588,8 +600,10 @@ class Wallet extends Component {
                         <div className="row form-group margin-top-30">
                             <div className="col-md-9">
                                 <h3>Next Withdrawal</h3>
+
                                 <div className="text-muted">
-                                    
+                                  {this.state.accountInfo} CST
+
                                 </div>
                             </div>
                         </div>
