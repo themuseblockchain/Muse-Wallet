@@ -98,8 +98,10 @@ class Login extends Component {
     };
 
     handleRememberMe(e) {
+        console.log(e);
         let remember_me_check_status = e.target.checked;
         this.setState({remember_me: remember_me_check_status});
+        console.log(remember_me_check_status);
     }
 
     handleKeyPress(target) {

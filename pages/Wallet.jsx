@@ -17,6 +17,7 @@ class Wallet extends Component {
 
         this.state = {
             walletInfo: [],
+            accountInfo: [],
             dropdownOpen: false,
             dropdownOpenVM: false,
             dropdownOpenMD: false,
@@ -40,6 +41,7 @@ class Wallet extends Component {
         };
 
         this.callbackUserInfo = this.callbackUserInfo.bind(this);
+        this.callbackFullUserInfo = this.callbackFullUserInfo.bind(this);
         this.callbackTransferFunds = this.callbackTransferFunds.bind(this);
         this.callbackTransferVestingFunds = this.callbackTransferVestingFunds.bind(this);
         this.callbackWithdrawVesting = this.callbackWithdrawVesting.bind(this);
@@ -53,7 +55,7 @@ class Wallet extends Component {
         this.transferFct = this.transferFct.bind(this);
         this.transferToVestFct = this.transferToVestFct.bind(this);
         this.withdrawVestingFct = this.withdrawVestingFct.bind(this);
-        
+
         this.toggleModalTransfer = this.toggleModalTransfer.bind(this);
         this.toggleModalTransferVesting = this.toggleModalTransferVesting.bind(this);
         this.toggleModalWithdrawVesting = this.toggleModalWithdrawVesting.bind(this);
@@ -147,6 +149,7 @@ class Wallet extends Component {
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
         let userInfo = muse.accountInfo(username, this.callbackUserInfo);
+        let fulluserInfo = muse.api.getAccounts([username], this.callbackFullUserInfo);
 
         var key_to_use = muse.auth.getPrivateKeys(username, password, ["owner", "active", "basic", "memo"]);
         this.setState({keyInfo: key_to_use});
@@ -160,8 +163,21 @@ class Wallet extends Component {
 
     callbackUserInfo(res, message, data) {
         data.balance = data.balance.toFixed(6);
-        data.vesting = data.vesting.toFixed(6);
+        data.vesting = data.vesting;
+
         this.setState({walletInfo: data });
+    }
+
+    callbackFullUserInfo(res, message, data) {
+
+        //This exposes the vesting withdrawal data of the selected account but
+        //should be used for all full details alternatively account info could have that data packed into it.
+        //that would however require changes in the muse js lib not the wallet itself.
+
+        data = message[0].next_vesting_withdrawal;
+
+        this.setState({accountInfo: data.replace("T", " ") });
+
     }
 
     tryHandleError()
@@ -183,7 +199,7 @@ class Wallet extends Component {
                 {
                     alert(tmpSplit[0].split(".")[0]);
                     return true;
-                }           
+                }
             } else {
                 alert(lastErrorMsg[0]);
                 return true;
@@ -194,12 +210,12 @@ class Wallet extends Component {
             return false;
         }
     }
-    
+
     callbackTransferFunds(code, message) {
         if(code == -1){
             if(!this.tryHandleError())
             {
-                alert('Unable to transfer funds');    
+                alert('Unable to transfer funds');
             }
         } else if(code == 1){
             // success
@@ -219,7 +235,7 @@ class Wallet extends Component {
         if(code == -1){
             if(!this.tryHandleError())
             {
-                alert('Unable to transfer funds to vesting');    
+                alert('Unable to transfer funds to vesting');
             }
         } else if(code == 1){
             // success
@@ -303,21 +319,21 @@ class Wallet extends Component {
 
     transferToAccountProc() {
         let isValidated = true;
-        
+
         if(this.state.toAccount == ""){
             isValidated = false;
             alert("Please input the account name ");
         }
         else if(this.state.amount == "" || isNaN(this.state.amount)){
             isValidated = false;
-            alert("Please input the numberic value for the amount field");
+            alert("Please input the numeric value for the amount field");
         }
         else if(parseFloat(this.state.amount) > parseFloat(this.state.walletInfo.balance)){
             isValidated = false;
             alert("Please input the sufficient funds in the amount field.");
         }
 
-        
+
         if(isValidated){
             this.setState({loading: true});
 
@@ -333,14 +349,14 @@ class Wallet extends Component {
 
         if(this.state.amount == "" || isNaN(this.state.amount)){
             isValidated = false;
-            alert("Please input the numberic value for the amount field");
+            alert("Please input the numeric value for the amount field");
         }
         else if(parseFloat(this.state.amount) > parseFloat(this.state.walletInfo.balance)){
             isValidated = false;
             alert("Please input the sufficient funds in the amount field.");
         }
 
-        
+
         if(isValidated){
             this.setState({loading: true});
 
@@ -362,7 +378,7 @@ class Wallet extends Component {
             isValidated = false;
             alert("Please input the sufficient vesting in the amount field.");
         }
-        
+
         if(isValidated){
             this.setState({loading: true});
 
@@ -371,6 +387,14 @@ class Wallet extends Component {
             muse.withdrawVesting(username, pwd, Number(this.state.amount).toFixed(6), this.callbackWithdrawVesting);
         }
         //this.toggleModalTransferVesting();
+    }
+
+    withdrawVestingCancelProc() {
+
+    let username = window.localStorage.getItem('username');
+    let pwd = window.localStorage.getItem('password');
+    muse.withdrawVesting(username, pwd, Number(0).toFixed(6), this.callbackWithdrawVesting);
+
     }
 
     defaultHistoryFormatter(userName, operationName, date, operationData, additionnal) {
@@ -424,13 +448,14 @@ class Wallet extends Component {
             history_info.text = 'Withdrawing ' + operationData.vesting_shares.split(" ")[0] + ' VEST';
             break;
         case "account_witness_vote":
+
             if(operationData.approve)
             {
-            history_info.text = 'Voted witness ' + operationData.witness;
+            history_info.text =  operationData.account +' Voted Witness ' + operationData.witness;
             }
             else
             {
-            history_info.text = 'UnVoted witness ' + operationData.witness;
+            history_info.text = operationData.account + ' UnVoted Witness ' + operationData.witness;
             }
             break;
         case "witness_update":
@@ -439,7 +464,16 @@ class Wallet extends Component {
         case "account_update":
             history_info.text = 'Account Update';
             break;
-        default: 
+        case "content":
+            history_info.text = 'Content Listed: URL: ' + operationData.url + ' Uploader: ' + operationData.uploader;
+            break;
+        case "fill_vesting_withdraw":
+            history_info.text = 'Withdrawal of VESTS completed from account: ' + operationData.from_account + ' to account: ' + operationData.to_account + ' of ' + operationData.deposited.split(" ")[0] + ' MUSE.';
+            break;
+        case "custom_json":
+            history_info.text = 'Custom Json ' + operationData.id + ' ' + operationData.json + ' ' + operationData.required_auths + ' ' + operationData.required_basic_auths;
+            break;
+        default:
             history_info.text = 'Unknown operation: ' + operationName;
         }
 
@@ -475,15 +509,15 @@ class Wallet extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
+
     }
 
     componentDidMount(){
-        
+
     }
 
     componentWillUnmount(){
-        
+
     }
 
     componentDidUpdate(){
@@ -508,11 +542,11 @@ class Wallet extends Component {
                             <div className="col-md-9">
                                 <h3>MUSE</h3>
                                 <div className="text-muted">
-                                    Tradeable tokens that may be transferred anywhere at anytime.<br/>MUSE can be vested by clicking transfer to Vesting. 
+                                    Tradeable tokens that may be transferred anywhere at anytime.<br/>MUSE can be vested by clicking transfer to Vesting.
                                 </div>
                             </div>
                             <div className="col-md-3 text-right margin-top-30">
-                                
+
                                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                                     <DropdownToggle caret>
                                         {this.state.walletInfo.balance} MUSE&nbsp;&nbsp;&nbsp;
@@ -534,14 +568,16 @@ class Wallet extends Component {
                                 </div>
                             </div>
                             <div className="col-md-3 text-right">
-                                
+
                                 <Dropdown isOpen={this.state.dropdownOpenVM} toggle={this.toggleVM}>
                                     <DropdownToggle caret>
                                         {this.state.walletInfo.vesting} MUSE&nbsp;&nbsp;&nbsp;
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem onClick={this.withdrawVestingFct}>Withdraw from Vesting</DropdownItem>
+                                        <DropdownItem onClick={this.withdrawVestingCancelProc}>Cancel Withdraw from Vesting</DropdownItem>
                                     </DropdownMenu>
+
                                 </Dropdown>
                             </div>
                         </div>
@@ -565,6 +601,17 @@ class Wallet extends Component {
                             </div>
                         </div>
 
+                        <div className="row form-group margin-top-30">
+                            <div className="col-md-9">
+                                <h3>Next Withdrawal</h3>
+
+                                <div className="text-muted">
+                                  {this.state.accountInfo} CST
+
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="margin-top-50">
                             <h3>HISTORY</h3>
                             <table className="table table-hover table-striped">
@@ -582,7 +629,7 @@ class Wallet extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        
+
                     </TabPanel>
                     <TabPanel>
                         <div className="row form-group margin-top-30">
@@ -665,7 +712,7 @@ class Wallet extends Component {
                         </div><hr/>
 
                         <div className="margin-top-50">
-                            
+
                             <div className="form-group margin-top-50">
                                 <label for="account_name">ACCOUNT NAME / MuseID</label>
                                 <input type="text" className="form-control" id="account_name" value={this.state.walletInfo.userName} disabled />
@@ -708,13 +755,13 @@ class Wallet extends Component {
 
                             <div className="form-group margin-top-50">
                                 <button type="button" className="btn btn-primary" onClick={this.updatePassword}>UPDATE PASSWORD</button>
-                            </div>                            
-                        
+                            </div>
+
                         </div>
                     </TabPanel>
 
                 </Tabs>
-                
+
                 <Modal isOpen={this.state.modalTransfer} toggle={this.toggleModalTransfer} className={this.props.className}>
                     <ModalHeader toggle={this.toggleModalTransfer}>Transfer to Account</ModalHeader>
                     <ModalBody>
@@ -749,7 +796,7 @@ class Wallet extends Component {
                                 <input className="form-control" type="text" id="transfer-memo" onChange={this.changeMemo} />
                             </div>
                         </div>
-                        
+
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.transferToAccountProc}>SUBMIT</Button>{' '}
@@ -785,7 +832,7 @@ class Wallet extends Component {
                 <Modal isOpen={this.state.modalWithdrawVesting} toggle={this.toggleModalWithdrawVesting} className={this.props.className}>
                     <ModalHeader toggle={this.toggleModalWithdrawVesting}>Withdraw Vesting</ModalHeader>
                     <ModalBody>
-                        <p>Withdraw Vesting.</p>
+                        <p>Withdraw Vesting. Please remember the decimal place moves 3 places to the left from VESTS to MUSE. Example 300000 VEST is 300 MUSE</p>
 
                         <div className="form-group row">
                             <label for="transfer-amount" className="col-2 col-form-label">Amount</label>

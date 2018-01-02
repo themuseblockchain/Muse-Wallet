@@ -9,6 +9,7 @@ import Register from '../pages/Register.jsx'
 import ClaimStake from '../pages/ClaimStake.jsx'
 import VoteWitness from '../pages/VoteWitness.jsx'
 
+
 export default (
     <Route path="/" component={LandingLayout}>
         <IndexRoute component={Login}/>
@@ -17,5 +18,6 @@ export default (
         <Route path="/claim-stake" component={ClaimStake}/>
         <Route path="/vote-witness" component={VoteWitness}/>
         <Route path="/register" component={Register}/>
+        
     </Route>
 );

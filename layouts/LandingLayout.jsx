@@ -61,7 +61,7 @@ export default class LandingLayout extends Component {
                 <div className="container margin-top-50 margin-bottom-65">
                     {childWithProp}
                 </div>
-                
+
                 <div className="footer-container">
                     <Footer />
                 </div>
