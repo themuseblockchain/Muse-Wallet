@@ -170,10 +170,14 @@ class Wallet extends Component {
 
     callbackFullUserInfo(res, message, data) {
 
+        //This exposes the vesting withdrawal data of the selected account but
+        //should be used for all full details alternatively account info could have that data packed into it.
+        //that would however require changes in the muse js lib not the wallet itself.
+
         data = message[0].next_vesting_withdrawal;
 
         this.setState({accountInfo: data.replace("T", " ") });
-        
+
     }
 
     tryHandleError()

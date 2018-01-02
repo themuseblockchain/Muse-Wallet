@@ -47,10 +47,10 @@ export default class Header extends Component {
         });
         if(url == '/wallet')
             this.props.updateLayoutStates({change_pwd: true})
-        
+
         var current_url = this.props.location.pathname;
-        
-        hashHistory.push(url);        
+
+        hashHistory.push(url);
     }
 
     logOut() {
@@ -97,13 +97,13 @@ export default class Header extends Component {
                             <img src="assets/img/logo.png" height="auto" width="60"/>
                             <span>MUSE beta</span>
 
-                            {isLoggedIn() ? <span className="login-btn account-btn cursor-pointer"> &nbsp;&nbsp;|&nbsp;&nbsp; @{getUserInformation()} &nbsp;&nbsp;|&nbsp;&nbsp;<a href="javascript:void(0)" onClick={this.gotoPage.bind(this, '/postcontent')}>Post Content</a></span> : null}
+                            {isLoggedIn() ? <span className="login-btn account-btn cursor-pointer"> &nbsp;&nbsp;|&nbsp;&nbsp; @{getUserInformation()} &nbsp;&nbsp; </span> : null}
                         </div>
                     </NavbarBrand>
 
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
-                            {isLoggedIn() ? 
+                            {isLoggedIn() ?
                             <NavItem>
                                 <NavLink href="javascript:void(0)" onClick={this.logOut}>Logout</NavLink>
                             </NavItem>
