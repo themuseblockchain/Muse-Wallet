@@ -52,12 +52,12 @@ class Login extends Component {
           let password = crypto.AES.encrypt(e.target.value, this.state.username);
           this.setState({ password: password });
           window.localStorage.setItem("password", password);
-          console.log(password);
+          //console.log(password);
     };
 
     callback_on_response(code, message) {
-        console.log(code);
-        console.log(message);
+        //console.log(code);
+        //console.log(message);
 
         this.setState({loading: false});
 
@@ -95,6 +95,7 @@ class Login extends Component {
         var bytes  = crypto.AES.decrypt(this.state.password.toString(), this.state.username);
         var plaintext = bytes.toString(crypto.enc.Utf8);
         muse.login(this.state.username, plaintext, this.callback_on_response);
+
     };
 
 

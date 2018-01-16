@@ -3,6 +3,7 @@ import { hashHistory  } from 'react-router'
 
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 import {getUserInformation} from '../helpers/Authentication.jsx'
+import crypto from 'crypto-js'
 
 import muse from 'muse-js';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -339,7 +340,9 @@ class Wallet extends Component {
 
             let username = window.localStorage.getItem('username');
             let pwd = window.localStorage.getItem('password');
-            muse.transferFunds(username, pwd, this.state.toAccount, Number(this.state.amount).toFixed(6), this.state.memo, this.callbackTransferFunds);
+            var bytes  = crypto.AES.decrypt(pwd.toString(), username);
+            var plaintext = bytes.toString(crypto.enc.Utf8);
+            muse.transferFunds(username, plaintext, this.state.toAccount, Number(this.state.amount).toFixed(6), this.state.memo, this.callbackTransferFunds);
         }
     }
 
@@ -362,7 +365,9 @@ class Wallet extends Component {
 
             let username = window.localStorage.getItem('username');
             let pwd = window.localStorage.getItem('password');
-            muse.transferFundsToVestings(username, pwd, null, Number(this.state.amount).toFixed(6), this.callbackTransferVestingFunds);
+            var bytes  = crypto.AES.decrypt(pwd.toString(), username);
+            var plaintext = bytes.toString(crypto.enc.Utf8);
+            muse.transferFundsToVestings(username, plaintext, null, Number(this.state.amount).toFixed(6), this.callbackTransferVestingFunds);
         }
     }
 
@@ -384,7 +389,9 @@ class Wallet extends Component {
 
             let username = window.localStorage.getItem('username');
             let pwd = window.localStorage.getItem('password');
-            muse.withdrawVesting(username, pwd, Number(this.state.amount).toFixed(6), this.callbackWithdrawVesting);
+            var bytes  = crypto.AES.decrypt(pwd.toString(), username);
+            var plaintext = bytes.toString(crypto.enc.Utf8);
+            muse.withdrawVesting(username, plaintext, Number(this.state.amount).toFixed(6), this.callbackWithdrawVesting);
         }
         //this.toggleModalTransferVesting();
     }
@@ -393,7 +400,9 @@ class Wallet extends Component {
 
     let username = window.localStorage.getItem('username');
     let pwd = window.localStorage.getItem('password');
-    muse.withdrawVesting(username, pwd, Number(0).toFixed(6), this.callbackWithdrawVesting);
+    var bytes  = crypto.AES.decrypt(pwd.toString(), username);
+    var plaintext = bytes.toString(crypto.enc.Utf8);
+    muse.withdrawVesting(username, plaintext, Number(0).toFixed(6), this.callbackWithdrawVesting);
 
     }
 
@@ -487,11 +496,15 @@ class Wallet extends Component {
 
     updatePassword(){
         let password = window.localStorage.getItem('password');
+
+        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+
         if(this.state.inputCurrentPassword == ""){
             alert("Please input the password.");
             return false;
         }
-        else if(this.state.inputCurrentPassword != password){
+        else if(this.state.inputCurrentPassword != plaintext){
             alert("You were input the wrong password. Please input your current password correctly!");
             return false;
         }
@@ -505,7 +518,7 @@ class Wallet extends Component {
         }
 
         var new_keys = muse.auth.getPrivateKeys(this.state.walletInfo.userName, this.state.newRandPassword, ["owner", "active", "basic", "memo"]);
-        muse.updateAccountKeys(this.state.walletInfo.userName, password, new_keys.ownerPubkey, new_keys.activePubkey, new_keys.basicPubkey, new_keys.memoPubkey, this.callbackUpdatePassword );
+        muse.updateAccountKeys(this.state.walletInfo.userName, plaintext, new_keys.ownerPubkey, new_keys.activePubkey, new_keys.basicPubkey, new_keys.memoPubkey, this.callbackUpdatePassword );
     }
 
     componentWillReceiveProps(nextProps) {
@@ -735,7 +748,7 @@ class Wallet extends Component {
                             </div>
 
                             <div className="form-group margin-top-50">
-                                <label for="conf_password">RE-ENTER GNERATED PASSWORD</label>
+                                <label for="conf_password">RE-ENTER GENERATED PASSWORD</label>
                                 <input type="password" className="form-control" id="conf_password" onChange={this.changeConfirmPassword}/>
                             </div>
 
