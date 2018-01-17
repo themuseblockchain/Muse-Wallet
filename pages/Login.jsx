@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import { hashHistory  } from 'react-router'
 import {isLoggedIn} from '../helpers/Authentication.jsx'
-
+import crypto from 'crypto-js'
 import muse from 'museblockchain-js'
 import localConfig from '../config.json'
 muse.configure(localConfig);
@@ -13,14 +13,13 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
-            remember_me: false,
             loading: false
         };
 
         this.changeUsername = this.changeUsername.bind(this);
         this.changePassword = this.changePassword.bind(this);
+
         this.doLogin = this.doLogin.bind(this);
-        this.handleRememberMe = this.handleRememberMe.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
 
         this.callback_on_response = this.callback_on_response.bind(this);
@@ -50,15 +49,15 @@ class Login extends Component {
     };
 
     changePassword(e) {
-        let password = e.target.value;
-        this.setState({ password: password });
-
-        window.localStorage.setItem("password", password);
+          let password = crypto.AES.encrypt(e.target.value, this.state.username);
+          this.setState({ password: password });
+          window.localStorage.setItem("password", password);
+          //console.log(password);
     };
 
     callback_on_response(code, message) {
-        console.log(code);
-        console.log(message);
+        //console.log(code);
+        //console.log(message);
 
         this.setState({loading: false});
 
@@ -76,7 +75,7 @@ class Login extends Component {
     };
 
     doLogin() {
-   
+
         if(this.state.username == ""){
             alert("Please input the User name");
             return false;
@@ -91,18 +90,15 @@ class Login extends Component {
 
         if(this.state.remember_me) {
             document.cookie = 'username=' + this.state.username;
-            document.cookie = 'password=' + this.state.password;
+            document.cookie = 'password=' + this.state.password ;
         }
+        var bytes  = crypto.AES.decrypt(this.state.password.toString(), this.state.username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+        muse.login(this.state.username, plaintext, this.callback_on_response);
 
-        muse.login(this.state.username, this.state.password, this.callback_on_response);
     };
 
-    handleRememberMe(e) {
-        console.log(e);
-        let remember_me_check_status = e.target.checked;
-        this.setState({remember_me: remember_me_check_status});
-        console.log(remember_me_check_status);
-    }
+
 
     handleKeyPress(target) {
         if(target.charCode==13){
@@ -121,15 +117,12 @@ class Login extends Component {
                 <div className="row">
                     <div className="col-md-6 offset-md-3">
                         <form>
-                            
+
                             <div className="form-group">
                                 <input type="text" className="form-control" onChange={this.changeUsername} placeholder="Enter your username" onKeyPress={this.handleKeyPress}/>
                             </div>
                             <div className="form-group">
                                 <input type="password" className="form-control" onChange={this.changePassword}  placeholder="Password or WIF" onKeyPress={this.handleKeyPress}/>
-                            </div>
-                            <div className="checkbox">
-                                <label><input type="checkbox" value="checked" onChange={this.handleRememberMe} /> Keep me logged in</label>
                             </div>
                             <div className="form-group">
                                 <button type="button" className="btn btn-success pull-left" onClick={this.doLogin}>LOGIN</button>

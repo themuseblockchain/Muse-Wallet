@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import { hashHistory  } from 'react-router'
+import crypto from 'crypto-js'
 
 import {isLoggedIn} from '../helpers/Authentication.jsx'
 import {getUserInformation} from '../helpers/Authentication.jsx'
@@ -79,17 +80,24 @@ class VoteWitness extends Component {
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
 
-        muse.witnessVote(username, password, this.state.witness_name, 1, this.callbackWitnessVote);
-    }
+        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+
+        muse.witnessVote(username, plaintext, this.state.witness_name, 1, this.callbackWitnessVote);
+        }
 
     witnessVoteOne(witness_name){
         this.setState({loading: true});
-        //console.log(witness_name);
+        console.log(witness_name);
 
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
 
-        muse.witnessVote(username, password, witness_name, 1, this.callbackWitnessVote);
+        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+
+        muse.witnessVote(username, plaintext, witness_name, 1, this.callbackWitnessVote);
+
     }
 
     witnessUnVoteOne(witness_name){
@@ -98,7 +106,10 @@ class VoteWitness extends Component {
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
 
-        muse.witnessVote(username, password, witness_name, 0, this.callbackWitnessVote);
+        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+
+        muse.witnessVote(username, plaintext, witness_name, 0, this.callbackWitnessVote);
     }
 
 
@@ -111,7 +122,7 @@ class VoteWitness extends Component {
                 <h6>As a MUSE holder you get 30 witness votes, use them wisely.</h6>
                 <h6>You have   {30 - this.state.witnessVotes.length}   witness votes left.</h6>
                 <div className="margin-top-50">
-                    
+
                     <table className="table table-hover table-striped">
                         <thead>
                             <td></td>
