@@ -219,3 +219,15 @@ block content
         div Withdrawn Vestings successfully
       else
         div Unable to Withdrawn Vestings
+
+  h2 VIEW ONLY Claim of Stake
+  form(action='/ws/view_claimofstake',method='post')
+    label(for='import_key') Import Key:
+      input(id='import_key',type='password',value=import_key,name='import_key')
+    br
+    button(type='submit') Find Balances  
+
+  if claim_stake_balances
+    br
+    div Balances to claim:
+    | #{claim_stake_balances}

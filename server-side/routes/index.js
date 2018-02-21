@@ -123,6 +123,31 @@ var base_display = function(type, req, res, next)
             doRender();
           }); 
         }
+        else if(type == "view_claimofstake")
+        {
+          try {
+            var addressesToUse = muse.auth.generateBalanceKeys([req.body.import_key]);
+            var privKey = muse.auth.fromPrivateWifTruncate(req.body.import_key);
+            var pubKey = privKey.toPublic();
+            //var pubKeyBase58 = pubKey.toPublicKeyStringSHA256(); // If using other call by key
+            muse.api.getBalanceObjects(addressesToUse, function (err, result) {
+              if (result && result.length > 0) {
+                viewbag.claim_stake_balances =
+                  "Balance Found for addresses: " + JSON.stringify(addressesToUse) +
+                  " and public key: " + JSON.stringify(pubKey.toString()) +
+                  " " + JSON.stringify(result);
+                  doRender();
+              } else {
+                viewbag.claim_stake_balances = "No Balance Found for addresses: " + JSON.stringify(addressesToUse) +
+                " and public key: " + JSON.stringify(pubKey.toString());
+                doRender();
+              }
+            });
+          } catch (ex) {
+            viewbag.claim_stake_balances = "Error Processing Key: " + ex.message;
+            doRender();
+          }  
+        }
         else if(type == 'account')
         {
           /**
@@ -394,6 +419,10 @@ router.get('/accounts', function(req, res, next) {
 
 router.post('/account_create', recaptchaMiddleware, function(req, res, next) {
   base_display('account_create', req, res, next)
+});
+
+router.post('/view_claimofstake', function(req, res, next) {
+  base_display('view_claimofstake', req, res, next)
 });
 
 router.post('/import_balance', function(req, res, next) {
