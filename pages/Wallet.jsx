@@ -497,7 +497,7 @@ class Wallet extends Component {
     updatePassword(){
         let password = window.localStorage.getItem('password');
 
-        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var bytes  = crypto.AES.decrypt(password.toString(), this.state.walletInfo.userName);
         var plaintext = bytes.toString(crypto.enc.Utf8);
 
         if(this.state.inputCurrentPassword == ""){
