@@ -149,10 +149,14 @@ class Wallet extends Component {
 
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
+        
+        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var plaintext = bytes.toString(crypto.enc.Utf8);
+        
         let userInfo = muse.accountInfo(username, this.callbackUserInfo);
         let fulluserInfo = muse.api.getAccounts([username], this.callbackFullUserInfo);
 
-        var key_to_use = muse.auth.getPrivateKeys(username, password, ["owner", "active", "basic", "memo"]);
+        var key_to_use = muse.auth.getPrivateKeys(username, plaintext, ["owner", "active", "basic", "memo"]);
         this.setState({keyInfo: key_to_use});
 
         muse.accountHistory(username, null, 1000, this.defaultHistoryFormatter, this.callbackWalletHistory);
