@@ -42,7 +42,7 @@ class Login extends Component {
     }
 
     changeUsername(e) {
-        let username = e.target.value;
+        let username = e.target.value.toLowerCase();
         this.setState({ username: username });
 
         window.localStorage.setItem("username", username);

@@ -23,6 +23,7 @@ class Step3 extends Component {
 
     this.validatorTypes = {
       account_name: Joi.string().min(3).required().label("ACCOUNT NAME"),
+      account_name: Joi.string().lowercase().required(),
       account_pwd: Joi.string().required().label("ACCOUNT PASSWORD"),
       account_pwd_confirm: Joi.string().required().valid(Joi.ref('account_pwd')).options({
         language:{
@@ -42,25 +43,62 @@ class Step3 extends Component {
   }
 
   callbackCreateAccount(response) {
-    /*if(response != 0)
-      this.props.jumpToStep(2);
-
-    if(response == -2){
-      alert("Account Already Exists. Please try again.");
-    }else if(response == -1){
-      alert("Unable to create account");
-    }*/
-
-    if(response.statusText == "OK"){
+    if(response.data.code == 0) {
       this.props.updateStore({
-        savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-      });
-      alert("Your account has been created successfully. Please try to login.");
+
+          savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
+
+        });
+
+
+
       hashHistory.push('/login');
-    } else{
+
+      //console.log(response);
+
+      alert(response.data.message);
+
+    } else {
+
       this.props.jumpToStep(2);
-      alert("Unable to create account");
+
+      alert(response.data.message);
+
+      //console.log(response);
     }
+    // if(response.data != 0)
+    //
+    //   this.props.jumpToStep(2);
+    //
+    // if(response.data == -2){
+    //
+    //   alert("Account Already Exists. Please try again.");
+    //
+    // }else if(response.data == -1){
+    //
+    //   alert("Unable to create account");
+    //
+    // };
+    //
+    // if(response.data == 0){
+    //
+    //   this.props.updateStore({
+    //
+    //     savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
+    //
+    //   });
+    //
+    //   alert("Your account has been created successfully. Please try to login.");
+    //
+    //   hashHistory.push('/login');
+    //
+    // }else{
+    //
+    //   this.props.jumpToStep(2);
+    //
+    //   alert("Unable to create account");
+    //
+    // }
   }
 
   isValidated() {
@@ -82,7 +120,7 @@ class Step3 extends Component {
 
         resolve(); // form is valid, fire action
 
-        var key_to_use = muse.auth.getPrivateKeys(this.props.getStore().account_name, this.props.getStore().account_pwd, ["owner", "active", "basic", "memo"]);
+        var key_to_use = muse.auth.getPrivateKeys(this.props.getStore().account_name.toLowerCase(), this.props.getStore().account_pwd, ["owner", "active", "basic", "memo"]);
         //muse.createAccountWithKeys(this.props.getStore().account_name, key_to_use.ownerPubkey, key_to_use.activePubkey, key_to_use.basicPubkey, key_to_use.memoPubkey, this.callbackCreateAccount);
         axios.post(config['api-address'] + 'create_account', {
           account_name: this.props.getStore().account_name,
@@ -93,7 +131,7 @@ class Step3 extends Component {
         })
         .then(this.callbackCreateAccount)
         .catch(function (error) {
-          
+
         });
       });
     });
@@ -101,7 +139,7 @@ class Step3 extends Component {
 
   getValidatorData() {
     return {
-      account_name: this.refs.account_name.value,
+      account_name: this.refs.account_name.value.toLowerCase(),
       account_pwd: this.refs.account_pwd.value,
       account_pwd_confirm: this.refs.account_pwd_confirm.value
     }
@@ -132,7 +170,7 @@ class Step3 extends Component {
         <div className="step step3">
             <div className="row">
                 <form id="Form" className="form-horizontal col-md-12">
-                  
+
                   <div className="form-group col-md-12 content form-block-holder margin-top-50 text-center">
                     <h5><a href="/#/terms-cond" className="badge badge-pill badge-default"><span >Terms & Cond > </span></a></h5>
                   </div>
@@ -154,7 +192,7 @@ class Step3 extends Component {
                             onBlur={this.props.handleValidation('account_name')}
                             onChange={this.onChange.bind(this)}
                         />
-
+                      <p>Do not use capital letters in your username.</p>
                         {this.props.getValidationMessages('account_name').map(this.renderHelpText)}
                     </div>
                   </div>

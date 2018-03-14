@@ -149,10 +149,10 @@ class Wallet extends Component {
 
         let username = window.localStorage.getItem('username');
         let password = window.localStorage.getItem('password');
-        
+
         var bytes  = crypto.AES.decrypt(password.toString(), username);
         var plaintext = bytes.toString(crypto.enc.Utf8);
-        
+
         let userInfo = muse.accountInfo(username, this.callbackUserInfo);
         let fulluserInfo = muse.api.getAccounts([username], this.callbackFullUserInfo);
 
@@ -501,7 +501,7 @@ class Wallet extends Component {
     updatePassword(){
         let password = window.localStorage.getItem('password');
 
-        var bytes  = crypto.AES.decrypt(password.toString(), username);
+        var bytes  = crypto.AES.decrypt(password.toString(), this.state.walletInfo.userName);
         var plaintext = bytes.toString(crypto.enc.Utf8);
 
         if(this.state.inputCurrentPassword == ""){
