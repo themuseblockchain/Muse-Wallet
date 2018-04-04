@@ -21,7 +21,7 @@ class ClaimStake extends Component {
         this.claimStake = this.claimStake.bind(this);
     }
 
-    
+
 
     componentWillMount() {
         if(!isLoggedIn()) {
@@ -30,14 +30,30 @@ class ClaimStake extends Component {
     }
 
     callbackClaimStake(code, message, result){
-        if(code == 1){
-            alert("Claim of stake was successful.");
-            this.setState({loading: false});
-            hashHistory.push('/wallet');
-        } else {
-            alert("Sorry, Unable to process. Please check your WIF or try again later.");
+
+        switch(code)
+        {
+          case -3 :
+          alert("Sorry, Unable to process. The key may be invalid.")
+          this.setState({loading: false});
+          break;
+
+          case -2 :
+          alert("Sorry, Unable to process. No balance was found on that key.")
+          this.setState({loading: false});
+          break;
+
+          case 0 :
+          alert("Claim of stake was successful.");
+          this.setState({loading: false});
+          hashHistory.push('/wallet');
+          break;
+
+          default:
+          alert("Sorry, Unable to process. The key may be invalid.")
+          this.setState({loading: false});
+          break;
         }
-        this.setState({loading: false});
     }
 
     changeWIF(e) {
@@ -77,7 +93,7 @@ class ClaimStake extends Component {
 
                 <div className="form-group margin-top-50">
                     <button type="button" className="btn btn-primary" onClick={this.claimStake}>CLAIM STAKE</button>
-                </div>                            
+                </div>
 
                 <div className={`loader-wrapper ${this.state.loading ? 'visible' : 'hidden'}`}></div>
                 <div className={`loader-container ${this.state.loading ? 'visible' : 'hidden'}`}>
