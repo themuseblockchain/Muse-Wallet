@@ -19,6 +19,7 @@ class Wallet extends Component {
         this.state = {
             walletInfo: [],
             accountInfo: [],
+            fulluserInfo: [],
             dropdownOpen: false,
             dropdownOpenVM: false,
             dropdownOpenMD: false,
@@ -46,6 +47,7 @@ class Wallet extends Component {
         this.callbackTransferFunds = this.callbackTransferFunds.bind(this);
         this.callbackTransferVestingFunds = this.callbackTransferVestingFunds.bind(this);
         this.callbackWithdrawVesting = this.callbackWithdrawVesting.bind(this);
+        this.callbackWithdrawVestingCancel = this.callbackWithdrawVestingCancel.bind(this);
         this.callbackWalletHistory = this.callbackWalletHistory.bind(this);
         this.callbackUpdatePassword = this.callbackUpdatePassword.bind(this);
 
@@ -64,6 +66,7 @@ class Wallet extends Component {
         this.transferToAccountProc = this.transferToAccountProc.bind(this);
         this.transferToVestingProc = this.transferToVestingProc.bind(this);
         this.withdrawVestingProc = this.withdrawVestingProc.bind(this);
+        this.withdrawVestingCancelProc = this.withdrawVestingCancelProc.bind(this);
 
         this.changeToAccount = this.changeToAccount.bind(this);
         this.changeAmount = this.changeAmount.bind(this);
@@ -167,6 +170,7 @@ class Wallet extends Component {
     }
 
     callbackUserInfo(res, message, data) {
+      
         data.balance = data.balance.toFixed(6);
         data.vesting = data.vesting;
 
@@ -179,9 +183,10 @@ class Wallet extends Component {
         //should be used for all full details alternatively account info could have that data packed into it.
         //that would however require changes in the muse js lib not the wallet itself.
 
-        data = message[0].next_vesting_withdrawal;
+        message[0].next_vesting_withdrawal = message[0].next_vesting_withdrawal.replace("T", " ");
+        message[0].mbd_balance = message[0].mbd_balance.split(" ")[0];
 
-        this.setState({accountInfo: data.replace("T", " ") });
+        this.setState({fulluserInfo: message[0] });
 
     }
 
@@ -191,7 +196,7 @@ class Wallet extends Component {
         {
             // error
             //alert("It seems you were input the wrong account name or wrong amount. Please try again.");
-            //console.log(muse.lastError.message.split("\n"));
+
             var lastErrorMsg = muse.lastError.message.split("\n");
             if(lastErrorMsg.length > 2){
                 var tmpSplit = lastErrorMsg[1].split(":");
@@ -264,13 +269,26 @@ class Wallet extends Component {
             // success
             let username = window.localStorage.getItem('username');
             let userInfo = muse.accountInfo(username, this.callbackUserInfo);
+            muse.accountHistory(username, null, 1000, this.defaultHistoryFormatter, this.callbackWalletHistory);
             this.toggleModalWithdrawVesting();
-        } else if(code <= 0){
+        } else if(code == 0){
             // failure
             alert("Withdraw Vesting was failed. Please try again.");
         }
 
         this.setState({loading: false});
+    }
+    callbackWithdrawVestingCancel(code, message){
+      if(code == 0){
+          // error
+          alert("You are not currently withdrawing anything.");
+      } else if(code == 1){
+          // success
+          let username = window.localStorage.getItem('username');
+          let userInfo = muse.accountInfo(username, this.callbackUserInfo);
+          muse.accountHistory(username, null, 1000, this.defaultHistoryFormatter, this.callbackWalletHistory);
+        }
+      this.setState({loading: false});
     }
 
     callbackUpdatePassword(code, message){
@@ -401,13 +419,13 @@ class Wallet extends Component {
     }
 
     withdrawVestingCancelProc() {
+      this.setState({loading: true});
 
     let username = window.localStorage.getItem('username');
     let pwd = window.localStorage.getItem('password');
     var bytes  = crypto.AES.decrypt(pwd.toString(), username);
     var plaintext = bytes.toString(crypto.enc.Utf8);
-    muse.withdrawVesting(username, plaintext, Number(0).toFixed(6), this.callbackWithdrawVesting);
-
+    muse.withdrawVesting(username, plaintext, Number(0).toFixed(6), this.callbackWithdrawVestingCancel);
     }
 
     defaultHistoryFormatter(userName, operationName, date, operationData, additionnal) {
@@ -566,7 +584,7 @@ class Wallet extends Component {
 
                                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                                     <DropdownToggle caret>
-                                        {this.state.walletInfo.balance} MUSE&nbsp;&nbsp;&nbsp;
+                                        {this.state.walletInfo.balance} &nbsp;&nbsp;&nbsp;
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem onClick={this.transferFct}>Transfer</DropdownItem>
@@ -588,7 +606,7 @@ class Wallet extends Component {
 
                                 <Dropdown isOpen={this.state.dropdownOpenVM} toggle={this.toggleVM}>
                                     <DropdownToggle caret>
-                                        {this.state.walletInfo.vesting} MUSE&nbsp;&nbsp;&nbsp;
+                                        {this.state.walletInfo.vesting} &nbsp;&nbsp;&nbsp;
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem onClick={this.withdrawVestingFct}>Withdraw from Vesting</DropdownItem>
@@ -609,7 +627,7 @@ class Wallet extends Component {
                             <div className="col-md-3 text-right">
                                 <Dropdown isOpen={this.state.dropdownOpenMD} toggle={this.toggleMD}>
                                     <DropdownToggle caret>
-                                        $0 &nbsp;&nbsp;&nbsp;
+                                        {this.state.fulluserInfo.mbd_balance} &nbsp;&nbsp;&nbsp;
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         <DropdownItem disabled>Market (Coming soon)</DropdownItem>
@@ -623,7 +641,7 @@ class Wallet extends Component {
                                 <h3>Next Withdrawal</h3>
 
                                 <div className="text-muted">
-                                  {this.state.accountInfo} CST
+                                  {this.state.fulluserInfo.next_vesting_withdrawal} CST
 
                                 </div>
                             </div>
@@ -634,7 +652,7 @@ class Wallet extends Component {
                             <table className="table table-hover table-striped">
                                 <tbody>
                                     {this.state.walletHistory.map(function (i) {
-                                        //console.log(i);
+
                                         return (
                                             <tr>
                                                 <td width="30%">{(new Date(Date.parse(i.date)).toISOString().split('.')[0]).substr(0,10)}</td>
